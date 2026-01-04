@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      '@bjorn3/browser_wasi_shim':
-        specifier: ^0.4.2
-        version: 0.4.2
     devDependencies:
       '@types/node':
         specifier: ^25.0.3
@@ -23,9 +19,6 @@ importers:
         version: 5.9.3
 
 packages:
-
-  '@bjorn3/browser_wasi_shim@0.4.2':
-    resolution: {integrity: sha512-/iHkCVUG3VbcbmEHn5iIUpIrh7a7WPiwZ3sHy4HZKZzBdSadwdddYDZAII2zBvQYV0Lfi8naZngPCN7WPHI/hA==}
 
   '@types/node@25.0.3':
     resolution: {integrity: sha512-W609buLVRVmeW693xKfzHeIV6nJGGz98uCPfeXI1ELMLXVeKYZ9m15fAMSaUPBHYLGFsVRcMmSCksQOrZV9BYA==}
@@ -233,8 +226,6 @@ packages:
     deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
 snapshots:
-
-  '@bjorn3/browser_wasi_shim@0.4.2': {}
 
   '@types/node@25.0.3':
     dependencies:
