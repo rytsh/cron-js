@@ -1,5 +1,5 @@
 {
-  "name": "cron-js",
+  "name": "cron-js-wasm",
   "version": "0.0.1",
   "description": "Cron parser WASM library",
   "type": "module",

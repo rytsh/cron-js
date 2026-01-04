@@ -1,6 +1,6 @@
 import { Cron, setWasmExports, isInitialized, WasmExports } from "./cron.js";
 
-const PKG_NAME = "cron-js";
+const PKG_NAME = "cron-js-wasm";
 const PKG_VERSION = "0.0.1";
 const CDN_URL = `https://cdn.jsdelivr.net/npm/${PKG_NAME}@${PKG_VERSION}/wasm/module.wasm`;
 

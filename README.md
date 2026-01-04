@@ -1,17 +1,17 @@
-# cron-js
+# cron-js-wasm
 
 Cron parser WASM library for Node.js and browsers, powered by TinyGo.
 
 ## Installation
 
 ```bash
-pnpm add cron-js
+pnpm add cron-js-wasm
 ```
 
 ## Usage
 
 ```typescript
-import { init, Cron } from "cron-js";
+import { init, Cron } from "cron-js-wasm";
 
 // Initialize WASM module first
 await init();
@@ -46,7 +46,7 @@ const nextFromDate = cron.next(new Date("2025-01-01"));
 The package automatically uses the browser entry point when bundled with Vite, Webpack, esbuild, etc.
 
 ```typescript
-import { init, Cron } from "cron-js";
+import { init, Cron } from "cron-js-wasm";
 
 // Initialize - automatically loads WASM from jsDelivr CDN
 await init();
@@ -77,7 +77,7 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: "node_modules/cron-js/wasm/module.wasm",
+          src: "node_modules/cron-js-wasm/wasm/module.wasm",
           dest: "wasm",
         },
       ],
@@ -91,7 +91,7 @@ export default defineConfig({
 ```json
 {
   "scripts": {
-    "copy:wasm": "cp node_modules/cron-js/wasm/module.wasm public/wasm/"
+    "copy:wasm": "cp node_modules/cron-js-wasm/wasm/module.wasm public/wasm/"
   }
 }
 ```
@@ -99,7 +99,7 @@ export default defineConfig({
 Then initialize with your hosted path:
 
 ```typescript
-import { init, Cron } from "cron-js";
+import { init, Cron } from "cron-js-wasm";
 
 await init("/wasm/module.wasm");
 ```
