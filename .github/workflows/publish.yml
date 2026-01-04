@@ -1,0 +1,52 @@
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - '*'
+      - '!demo*'
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Setup TinyGo
+        uses: acifani/setup-tinygo@v2
+        with:
+          tinygo-version: 0.40.1
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build WASM
+        run: pnpm build:wasm
+
+      - name: Build package
+        run: pnpm build
+
+      - name: Publish to npm with provenance
+        run: pnpm publish --access public --no-git-checks --provenance
+        env:
+          NPM_CONFIG_PROVENANCE: true
