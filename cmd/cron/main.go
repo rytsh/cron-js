@@ -1,10 +1,14 @@
-package cronjs
+package main
 
 import (
 	"time"
 
 	"github.com/worldline-go/hardloop"
 )
+
+func main() {
+	select {}
+}
 
 type Cron struct {
 	schedules []hardloop.Schedule
