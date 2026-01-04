@@ -1,6 +1,6 @@
 {
   "name": "cron-js-wasm",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Cron parser WASM library",
   "type": "module",
   "main": "./dist/index.js",
@@ -30,8 +30,9 @@
   ],
   "scripts": {
     "build": "tsc",
-    "build:wasm": "tinygo build -o ./wasm/module.wasm -target=wasm -no-debug cmd/cron/main.go",
-    "example": "node example.js"
+    "build:wasm": "tinygo build -o ./wasm/module.wasm -target=wasip1 -no-debug cmd/cron/main.go",
+    "example": "node example.js",
+    "preview": "pnpx http-server ./ -c-1 -o /example.html"
   },
   "keywords": [
     "cron",

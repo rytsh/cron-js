@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cron WASM Example</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      color: #333;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .input-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .results {
+      margin-top: 20px;
+    }
+    .result-item {
+      background: #f8f9fa;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      border-left: 3px solid #007bff;
+    }
+    .result-item h3 {
+      margin: 0 0 5px 0;
+      color: #333;
+    }
+    .result-item ul {
+      margin: 5px 0;
+      padding-left: 20px;
+    }
+    .error {
+      color: #dc3545;
+      background: #f8d7da;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .status {
+      color: #666;
+      font-style: italic;
+    }
+    code {
+      background: #e9ecef;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cron WASM Example</h1>
+  
+  <div class="container">
+    <p class="status" id="status">Loading WASM module...</p>
+    
+    <div class="input-group">
+      <label for="cronSpec">Cron Expression:</label>
+      <input type="text" id="cronSpec" value="*/5 * * * *" placeholder="e.g., */5 * * * *">
+    </div>
+    
+    <button id="parseBtn" disabled>Parse Cron</button>
+    
+    <div class="results" id="results"></div>
+  </div>
+
+  <script type="module">
+    import { init, Cron } from './dist/browser.js';
+
+    const statusEl = document.getElementById('status');
+    const parseBtn = document.getElementById('parseBtn');
+    const cronSpecInput = document.getElementById('cronSpec');
+    const resultsEl = document.getElementById('results');
+
+    async function initialize() {
+      try {
+        // Load WASM from local file
+        await init('./wasm/module.wasm');
+        statusEl.textContent = 'WASM loaded successfully!';
+        statusEl.style.color = '#28a745';
+        parseBtn.disabled = false;
+      } catch (err) {
+        statusEl.textContent = `Failed to load WASM: ${err.message}`;
+        statusEl.className = 'error';
+        console.error(err);
+      }
+    }
+
+    function parseCron() {
+      const spec = cronSpecInput.value.trim();
+      if (!spec) {
+        resultsEl.innerHTML = '<p class="error">Please enter a cron expression</p>';
+        return;
+      }
+
+      try {
+        const cron = new Cron(spec);
+        const now = new Date();
+        
+        const next = cron.next(now);
+        const prev = cron.prev(now);
+        const nextN = cron.nextN(5, now);
+        const prevN = cron.prevN(5, now);
+
+        resultsEl.innerHTML = `
+          <div class="result-item">
+            <h3>Current Time</h3>
+            <p>${now.toLocaleString()}</p>
+          </div>
+          
+          <div class="result-item">
+            <h3>Next Occurrence</h3>
+            <p>${next.toLocaleString()}</p>
+          </div>
+          
+          <div class="result-item">
+            <h3>Previous Occurrence</h3>
+            <p>${prev.toLocaleString()}</p>
+          </div>
+          
+          <div class="result-item">
+            <h3>Next 5 Occurrences</h3>
+            <ul>
+              ${nextN.map(d => `<li>${d.toLocaleString()}</li>`).join('')}
+            </ul>
+          </div>
+          
+          <div class="result-item">
+            <h3>Previous 5 Occurrences</h3>
+            <ul>
+              ${prevN.map(d => `<li>${d.toLocaleString()}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      } catch (err) {
+        resultsEl.innerHTML = `<p class="error">Error: ${err.message}</p>`;
+        console.error(err);
+      }
+    }
+
+    parseBtn.addEventListener('click', parseCron);
+    cronSpecInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && !parseBtn.disabled) {
+        parseCron();
+      }
+    });
+
+    initialize();
+  </script>
+</body>
+</html>

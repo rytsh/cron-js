@@ -4,11 +4,11 @@ async function main() {
   // Initialize WASM first
   await init();
 
-  // Create a cron instance with multiple specs separated by ;
-  const cron = new Cron("0 7 * * 1,2,3,4,5;0 9 * * 6");
+  // Create a cron instance
+  const cron = new Cron("*/5 * * * *");
 
-  console.log("Cron specs: 0 7 * * 1,2,3,4,5;0 9 * * 6");
-  console.log("(7am on weekdays, 9am on Saturday)\n");
+  console.log("Cron spec: */5 * * * *");
+  console.log("(Every 5 minutes)\n");
 
   // Next
   const next = cron.next();
